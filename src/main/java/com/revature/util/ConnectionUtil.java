@@ -18,8 +18,7 @@ public class ConnectionUtil {
 		InputStream in = null;
 		try {
 			Properties prop = new Properties();
-			in = new FileInputStream("\\src\\main\\resources\\connection.properties");
-			System.out.println(new File(".").getAbsolutePath());
+			in = new FileInputStream("/src/main/resources/connection.properties");
 			prop.load(in);
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			Connection con = null;
