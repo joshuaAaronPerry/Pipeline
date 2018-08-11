@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ConnectionUtil {
 
@@ -18,7 +20,9 @@ public class ConnectionUtil {
 		InputStream in = null;
 		try {
 			Properties prop = new Properties();
-			in = new FileInputStream("/src/main/resources/connection.properties");
+			Path propFile = Paths.get("/src/main/resources/connection.properties");
+			String path = propFile.toAbsolutePath().toString();
+			in = new FileInputStream(path);
 			prop.load(in);
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			Connection con = null;
