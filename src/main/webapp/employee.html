@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+.navbar {
+   background-color: #333;
+   overflow: hidden;
+}
+.navbar span {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+.navbar span:hover {
+    background-color: #ddd;
+    color: black;
+}
+.navbar span.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+</style>
+
+<meta charset="ISO-8859-1">
+<title>Employee HomePage</title>
+</head>
+<body>
+
+	<div class="navbar">
+  		<span id="home">New Request</span>
+  		<span id="requests">Requests</span>
+  		<span id="info">My Info</span>
+  		<span id="update">Update Info</span>
+  		<span id="logout"><a href="logout.do" style="color : white; text-decoration : none">Logout</a></span>
+	</div>
+	
+	<h1 id="welcome"></h1>
+	
+	<div id="content">
+	
+		
+		<form action="rr.do" method="post">
+			<h2>Enter information for a reimbursment:</h2>
+			<p>
+				<span>Enter the amount:</span><br>
+				<input type="text" name="amount">
+			</p>
+			<p>
+				<span>Enter a description:</span><br>
+				<textarea rows="5" cols="60" name="description"></textarea>
+			</p>
+			<input type="submit" value="Submit">
+		</form>
+	
+	
+	</div>
+	
+
+
+<script>
+window.onload = function() {
+	document.getElementById("info")
+			.addEventListener("click", grabInfo);
+	document.getElementById("requests")
+			.addEventListener("click", grabRequests);
+	document.getElementById("update")
+			.addEventListener("click", updateForm);
+}
+
+function updateForm() {
+	let fm = document.createElement("form");
+	fm.setAttribute("method", "post");
+	fm.setAttribute("action", "update.do")
+	
+	let i1 = document.createElement("input");
+	i1.setAttribute('type',"text");
+	i1.setAttribute('name',"first");
+	i1.setAttribute("placeholder", "first name");
+	
+	let i2 = document.createElement("input");
+	i2.setAttribute('type',"text");
+	i2.setAttribute('name',"last");
+	i2.setAttribute("placeholder", "last name");
+	
+	let i3 = document.createElement("input");
+	i3.setAttribute('type',"email");
+	i3.setAttribute('name',"email");
+	i3.setAttribute("placeholder", "email");
+	
+	let i4 = document.createElement("input");
+	i4.setAttribute('type',"password");
+	i4.setAttribute('name',"password");
+	i4.setAttribute("placeholder", "password");
+	
+	let i5 = document.createElement("input");
+	i5.setAttribute('type',"submit");
+	i5.setAttribute('name',"submit");
+	
+	fm.appendChild(i1);
+	fm.appendChild(i2);
+	fm.appendChild(i3);
+	fm.appendChild(i4);
+	fm.appendChild(i5);
+	
+	document.getElementById("content").innerHTML = "";
+	document.getElementById("content").appendChild(fm);
+}
+
+function grabInfo() {
+	let xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if(xhttp.readyState == 4 && xhttp.status == 200) {
+			let ajaxObject = JSON.parse(xhttp.responseText);
+			console.log(xhttp.responseText);
+			setInfoValues(ajaxObject);
+		}
+	};
+	xhttp.open("POST", "http://localhost:8080/FrontServlet/grabInfo.ajax", true);
+	xhttp.send();
+}
+
+function grabRequests() {
+	let xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if(xhttp.readyState == 4 && xhttp.status == 200) {
+			let ajaxObject = JSON.parse(xhttp.responseText);
+			console.log(xhttp.responseText);
+			setRequestValues(ajaxObject);
+		}
+	};
+	xhttp.open("POST", "http://localhost:8080/FrontServlet/grabRequests.ajax", true);
+	xhttp.send();
+}
+
+function setInfoValues(ajaxObject) {
+	document.getElementById("content").innerHTML = "";
+	let newDiv = document.createElement("div");
+	let name = document.createTextNode("Name : " + ajaxObject["firstName"] + " " + ajaxObject["lastName"]);
+	let email = document.createTextNode("Email : " + ajaxObject["email"]);
+	let id = document.createTextNode("Employee ID : " + ajaxObject["e_id"]);
+	let db = ajaxObject["dateOfBirth"];
+	let dob = document.createTextNode("Date of Birth : " + db["month"] + "-" + db["dayOfMonth"] + "-" + db["year"]);
+	newDiv.appendChild(id);
+	newDiv.appendChild(name);
+	newDiv.appendChild(email);
+	newDiv.appendChild(dob);
+	document.getElementById("content").appendChild(newDiv);
+}
+
+function setRequestValues(ajaxObject) {
+	document.getElementById("content").innerHTML = "";
+	for(i = 0; i < ajaxObject.length; i++) {
+		let newDiv = document.createElement("div");
+		let id = document.createTextNode("Request Id : " + ajaxObject[i]["r_id"]);
+		let amount = document.createTextNode("Amount Requested : " + ajaxObject[i]["amount"]);
+		let desc = document.createTextNode("" + ajaxObject[i]["description"]);
+		let status;
+		if(ajaxObject[i]["isResolved"] == -1)
+			status = "closed";
+		else if(ajaxObject[i]["isResolved"] == 0)
+			status = "pending";
+		else if(ajaxObject[i]["isResolved"] == 1)
+			status = "approved";
+		newDiv.appendChild(id);
+		let p1 = document.createElement("P");
+		let st = document.createTextNode("Status : " + status);
+		p1.appendChild(st);
+		newDiv.appendChild(amount);
+		newDiv.appendChild(desc);
+		newDiv.appendChild(p1);
+		document.getElementById("content").appendChild(newDiv);
+	}
+	
+}
+</script>
+
+</body>
+</html>
