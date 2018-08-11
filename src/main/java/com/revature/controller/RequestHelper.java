@@ -7,15 +7,15 @@ public class RequestHelper {
 	public static String processRequest(HttpServletRequest request) {
 		System.out.println(request.getRequestURI());
 		switch(request.getRequestURI()) {
-		case "/FrontServlet/login.do":
+		case "/ERSProject/FrontServlet/login.do":
 			return LoginController.login(request);
-		case "/FrontServlet/logout.do":
+		case "/ERSProject/FrontServlet/logout.do":
 			return LogoutController.logout(request);
-		case "/FrontServlet/employee.do":
+		case "/ERSProject/FrontServlet/employee.do":
 			return EmployeeController.employeePage(request);
-		case "/FrontServlet/rr.do":
+		case "/ERSProject/FrontServlet/rr.do":
 			return RequestController.createRequest(request);
-		case "/FrontServlet/update.do":
+		case "/ERSProject/FrontServlet/update.do":
 			return InfoController.updateInfo(request);
 		default: return "404.html";
 		}
