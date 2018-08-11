@@ -18,7 +18,7 @@ public class ConnectionUtil {
 		InputStream in = null;
 		try {
 			Properties prop = new Properties();
-			in = new FileInputStream("C:\\my_git_repos\\1807-july-jta\\Josh_Perry_Code\\ERSProject\\ERSProject\\src\\main\\resources\\connection.properties");
+			in = new FileInputStream("\\ERSProject\\src\\main\\resources\\connection.properties");
 			prop.load(in);
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			Connection con = null;
